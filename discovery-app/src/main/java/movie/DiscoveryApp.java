@@ -2,7 +2,6 @@ package movie;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +14,6 @@ import java.net.URI;
 
 @SpringBootApplication
 @RestController
-@EnableDiscoveryClient
 public class DiscoveryApp {
 
     public DiscoveryApp(RestTemplate restTemplate) {
@@ -32,7 +30,8 @@ public class DiscoveryApp {
 
     @GetMapping("/topgrossing/{year}")
     String getTopGrossingMovie(@PathVariable Integer year) {
-        URI uri = UriComponentsBuilder.fromUriString("//resilient-movie-app/movies/" + year).build().toUri();
+        String url = "https://resilient-movie-app.cfapps.io/movies/";
+        URI uri = UriComponentsBuilder.fromUriString(url + year).build().toUri();
         return restTemplate.getForObject(uri, String.class);
     }
 

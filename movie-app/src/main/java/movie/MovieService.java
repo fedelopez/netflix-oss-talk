@@ -1,12 +1,10 @@
 package movie;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.stereotype.Service;
 
 @Service
 class MovieService {
 
-    @HystrixCommand(fallbackMethod = "getCurrentTopGrossingMovie")
     String getTopGrossingMovie(Integer year) {
         switch (year) {
             case 2016: return "Finding Dory";
@@ -18,10 +16,6 @@ class MovieService {
             case 2010: return "Toy Story 3";
             default: throw new IllegalArgumentException("Boom!");
         }
-    }
-
-    String getCurrentTopGrossingMovie(Integer year) {
-        return "Beauty and the Beast";
     }
 }
 
