@@ -1,24 +1,32 @@
 package movie;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @SpringBootApplication
 @RestController
+@EnableDiscoveryClient
 public class DiscoveryApp {
 
-    public DiscoveryApp(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    private RestTemplate restTemplate;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     @Bean
     @LoadBalanced
@@ -26,17 +34,19 @@ public class DiscoveryApp {
         return new RestTemplate();
     }
 
-    private final RestTemplate restTemplate;
-
     @GetMapping("/topgrossing/{year}")
     String getTopGrossingMovie(@PathVariable Integer year) {
-        String url = "https://resilient-movie-app.cfapps.io/movies/";
-        URI uri = UriComponentsBuilder.fromUriString(url + year).build().toUri();
+        URI uri = UriComponentsBuilder.fromUriString("//resilient-movie-app/movies/" + year).build().toUri();
         return restTemplate.getForObject(uri, String.class);
     }
 
+    @RequestMapping("/service-instances/{applicationName}")
+    public List<ServiceInstance> serviceInstancesByApplicationName(
+            @PathVariable String applicationName) {
+        return discoveryClient.getInstances(applicationName);
+    }
+
     public static void main(String[] args) {
-        SpringApplication.run(DiscoveryApp.class, args);
+        SpringApplication.run(movie.DiscoveryApp.class, args);
     }
 }
-
