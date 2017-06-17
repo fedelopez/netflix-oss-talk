@@ -10,6 +10,8 @@
 
 ## TODO
 
+- Understand @LoadBalanced ResTemplate
+- Understand Hystrix Dashboard Thread Pools
 - Configuration keys (https://github.com/Netflix/Hystrix/wiki/Configuration)
 - Using the dashboard (http://docs.pivotal.io/spring-cloud-services/1-3/common/circuit-breaker/using-the-dashboard.html)
 
