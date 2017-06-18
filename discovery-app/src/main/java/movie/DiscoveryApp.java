@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @SpringBootApplication
@@ -35,8 +33,8 @@ public class DiscoveryApp {
 
     @GetMapping("/topgrossing/{year}")
     String getTopGrossingMovie(@PathVariable Integer year) {
-        URI uri = UriComponentsBuilder.fromUriString("//resilient-movie-app/movies/" + year).build().toUri();
-        return restTemplate.getForObject(uri, String.class);
+        String url = "//resilient-movie-app/movies/" + year;
+        return restTemplate.getForObject(url, String.class);
     }
 
     @GetMapping("/service-instances/{applicationName}")
