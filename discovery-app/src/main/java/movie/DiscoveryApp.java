@@ -25,12 +25,6 @@ public class DiscoveryApp {
     @Autowired
     private DiscoveryClient discoveryClient;
 
-    @Bean
-    @LoadBalanced
-    RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
     @GetMapping("/topgrossing/{year}")
     String getTopGrossingMovie(@PathVariable Integer year) {
         String url = "//resilient-movie-app/movies/" + year;
@@ -40,6 +34,12 @@ public class DiscoveryApp {
     @GetMapping("/service-instances/{applicationName}")
     public List<ServiceInstance> serviceInstancesByApplicationName(@PathVariable String applicationName) {
         return discoveryClient.getInstances(applicationName);
+    }
+
+    @Bean
+    @LoadBalanced
+    RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     public static void main(String[] args) {
